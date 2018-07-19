@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
     private void postPreLoad() {
         mHandler.postDelayed(() -> {
             List<UrlItem> items = getVisibleItem();
+            mPreLoadUtil.reset();
             for (UrlItem urlItem : items) {
                 loadItem(urlItem);
             }
@@ -113,10 +114,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadItem(UrlItem urlItem) {
-        mPreLoadUtil.loadUrl(urlItem.url, new PreLoadUtil.onLoadListener() {
+        mPreLoadUtil.loadUrl(urlItem.url, new PreLoadUtil.OnLoadListener() {
             @Override
             public void success(String url) {
                 urlItem.state = "预加载成功";
+                mAdapter.notifyItemChanged(mList.indexOf(urlItem));
+            }
+
+            @Override
+            public void process(String url, int process) {
+                urlItem.state = "加载中 ：" + process;
                 mAdapter.notifyItemChanged(mList.indexOf(urlItem));
             }
 

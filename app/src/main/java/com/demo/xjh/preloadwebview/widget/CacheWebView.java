@@ -53,6 +53,9 @@ public class CacheWebView extends CustomWebView {
         setOnShouldInterceptRequest();
     }
 
+    /**
+     * jpg 图片缓存到data/data/package
+     */
     private void setOnShouldInterceptRequest() {
         Context applicationContext = getContext().getApplicationContext();
         setOnShouldInterceptRequest(new CustomWebView.OnShouldInterceptRequest() {
@@ -60,16 +63,19 @@ public class CacheWebView extends CustomWebView {
             public WebResourceResponse shouldInterceptRequest(@NotNull WebView view, @NotNull WebResourceRequest request) {
                 String imgUrl = request.getUrl().toString();
                 if (imgUrl.contains(".jpg")) {
+                    //图片使用url哈希后作为文件名
                     String ext = imgUrl.hashCode() + ".jpg";
                     if (cachedImageIsExist(ext)) {
                         File file = new File(applicationContext.getCacheDir(), ext);
                         try {
                             FileInputStream inputStream = new FileInputStream(file);
+                            //从本地读取图片
                             return new WebResourceResponse("image/jpg", "UTF-8", inputStream);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
                     } else {
+                        //图片用线程池存到本地
                         final HttpURLConnection connection = getConnection(imgUrl);
                         if (connection != null) {
                             mThreadPool.execute(() -> cacheImage(connection));

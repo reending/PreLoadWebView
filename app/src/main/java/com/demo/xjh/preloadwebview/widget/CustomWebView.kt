@@ -22,12 +22,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.demo.xjh.preloadwebview.R
 
-
-/**
- *
- * Created by XuJunHua on 2016/11/8.
- */
-
 open class CustomWebView : WebView {
 
     constructor(context: Context) : super(context) {
@@ -64,6 +58,7 @@ open class CustomWebView : WebView {
     private var mOnPageSuccessListener: OnPageSuccessListener? = null
     private var mOnFileChooseCalledListener: OnFileChooseCalledListener? = null
     private var mOnShouldInterceptRequest: OnShouldInterceptRequest? = null
+    private var mOnProcessListener: onProcessListener? = null
 
     private val loadFlag = booleanArrayOf(false, false, true)
     private val loadFlagMap: ArrayMap<String, Boolean> = ArrayMap()
@@ -208,6 +203,9 @@ open class CustomWebView : WebView {
         mOnShouldInterceptRequest = onShouldInterceptRequest;
     }
 
+    fun setOnProcessListener(onProcessListener: onProcessListener) {
+        mOnProcessListener = onProcessListener
+    }
 
     @Deprecated("", ReplaceWith("throw RuntimeException(\"this method has been deprecated and you should use the one that with parameter extend CustomWebChromeClient\")"))
     override fun setWebChromeClient(client: WebChromeClient) {
@@ -223,6 +221,7 @@ open class CustomWebView : WebView {
             super.onProgressChanged(view, newProgress)
             Log.d(TAG, newProgress.toString())
             mProgressBar.progress = newProgress
+            mOnProcessListener?.onProcess(newProgress)
             if (newProgress == 100) {
                 mProgressBar.visibility = View.GONE
                 loadFlag[0] = true
@@ -309,6 +308,7 @@ open class CustomWebView : WebView {
             mErrorPage?.visibility = View.VISIBLE
             loadFlag[2] = false
             mOnReceivedErrorListener?.onReceivedError(errorCode, description, failingUrl)
+            resetLoadFlag()
         }
 
         @TargetApi(android.os.Build.VERSION_CODES.M)
@@ -347,6 +347,10 @@ open class CustomWebView : WebView {
 
     interface OnPageStartedListener {
         fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?)
+    }
+
+    interface onProcessListener {
+        fun onProcess(process: Int);
     }
 
     interface OnFileChosenListener {
