@@ -1,8 +1,12 @@
 package com.demo.xjh.preloadwebview.main;
 
 import android.content.Context;
+import android.webkit.WebView;
 
 import com.demo.xjh.preloadwebview.widget.CacheWebView;
+import com.demo.xjh.preloadwebview.widget.CustomWebView;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -40,6 +44,7 @@ public class PreLoadUtil {
         if (mMap.isEmpty()) {
             mCurrentUrl = url;
             mCacheWebView.loadUrl(url);
+
         }
         mMap.put(url, listener);
     }

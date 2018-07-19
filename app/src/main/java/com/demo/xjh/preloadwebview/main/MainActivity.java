@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         for (String mUrl : mUrls) {
             UrlItem urlItem = new UrlItem();
             urlItem.url = mUrl;
+            urlItem.state = "未加载";
             mList.add(urlItem);
         }
         mAdapter.notifyDataSetChanged();
