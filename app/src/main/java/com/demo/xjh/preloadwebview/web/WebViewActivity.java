@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.demo.xjh.preloadwebview.widget.CustomWebView;
 import com.demo.xjh.preloadwebview.R;
+import com.demo.xjh.preloadwebview.widget.CacheWebView;
 
 import static android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK;
 
 public class WebViewActivity extends AppCompatActivity {
-    CustomWebView mWebView = null;
+    CacheWebView mWebView = null;
 
     public static void start(Context context, String url) {
         Intent starter = new Intent(context, WebViewActivity.class);
