@@ -1,4 +1,5 @@
-package com.demo.xjh.preloadwebview
+package com.demo.xjh.preloadwebview.widget
+
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Bitmap
@@ -19,6 +20,7 @@ import android.webkit.*
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.demo.xjh.preloadwebview.R
 
 
 /**
@@ -26,7 +28,7 @@ import android.widget.TextView
  * Created by XuJunHua on 2016/11/8.
  */
 
-class CustomWebView : WebView {
+open class CustomWebView : WebView {
 
     constructor(context: Context) : super(context) {
         init()
@@ -111,15 +113,6 @@ class CustomWebView : WebView {
         val height = dp2dx(2f)
         val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.MATCH_PARENT, height)
-        //        Drawable[] layers = new Drawable[2];
-        //        layers[0]  = new ColorDrawable(Color.parseColor("#FF0000"));
-        //        layers[1]  = new ColorDrawable(Color.parseColor("#0000FF"));
-        //        LayerDrawable layerDrawable = new LayerDrawable(layers);
-        //        int id0 = getResources().getIdentifier("background", "drawable", getContext().getPackageName());
-        //        int id1 = getResources().getIdentifier("progress", "drawable", getContext().getPackageName());
-        //        layerDrawable.setId(0,id0);
-        //        layerDrawable.setId(1,id1);
-        //// TODO: 2017/1/18 有没有办法不用资源文件直接创建layerDrawable.需要解决background,progress id 问题
         val drawable = ContextCompat.getDrawable(context, R.drawable.web_progress_bar_states)
         mProgressBar.progressDrawable = drawable
         mProgressBar.layoutParams = layoutParams
@@ -132,6 +125,7 @@ class CustomWebView : WebView {
         setWebviewClient(mClient)
         setWebChromeClient(mChromeClient)
     }
+
     override fun reload() {
         resetLoadFlag()
         super.reload()
@@ -209,7 +203,8 @@ class CustomWebView : WebView {
     fun setOnFileChooseCalledListener(onFileChooseCalledListener: OnFileChooseCalledListener) {
         mOnFileChooseCalledListener = onFileChooseCalledListener
     }
-    fun setOnShouldInterceptRequest(onShouldInterceptRequest: OnShouldInterceptRequest){
+
+    fun setOnShouldInterceptRequest(onShouldInterceptRequest: OnShouldInterceptRequest) {
         mOnShouldInterceptRequest = onShouldInterceptRequest;
     }
 
@@ -248,33 +243,34 @@ class CustomWebView : WebView {
 
         // For Android < 3.0
         fun openFileChooser(valueCallback: ValueCallback<Uri>) {
-            mOnFileChooseCalledListener?.onFileChooseCalled(object: OnFileChosenListener {
+            mOnFileChooseCalledListener?.onFileChooseCalled(object : OnFileChosenListener {
                 override fun onFileChosen(uris: Array<Uri>) {
-                    uris.forEach { url -> valueCallback.onReceiveValue(url)}
+                    uris.forEach { url -> valueCallback.onReceiveValue(url) }
                 }
             })
         }
 
         // For Android  >= 3.0
         fun openFileChooser(valueCallback: ValueCallback<Uri>, acceptType: String) {
-            mOnFileChooseCalledListener?.onFileChooseCalled(object: OnFileChosenListener {
+            mOnFileChooseCalledListener?.onFileChooseCalled(object : OnFileChosenListener {
                 override fun onFileChosen(uris: Array<Uri>) {
-                    uris.forEach {url -> valueCallback.onReceiveValue(url)}
+                    uris.forEach { url -> valueCallback.onReceiveValue(url) }
                 }
             })
         }
 
         //For Android  >= 4.1
         fun openFileChooser(valueCallback: ValueCallback<Uri>, acceptType: String, capture: String) {
-            mOnFileChooseCalledListener?.onFileChooseCalled(object: OnFileChosenListener {
+            mOnFileChooseCalledListener?.onFileChooseCalled(object : OnFileChosenListener {
                 override fun onFileChosen(uris: Array<Uri>) {
-                    uris.forEach { url -> valueCallback.onReceiveValue(url)}
+                    uris.forEach { url -> valueCallback.onReceiveValue(url) }
                 }
             })
         }
+
         // For Android >= 5.0
         override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams): Boolean {
-            mOnFileChooseCalledListener?.onFileChooseCalled(object: OnFileChosenListener {
+            mOnFileChooseCalledListener?.onFileChooseCalled(object : OnFileChosenListener {
                 override fun onFileChosen(uris: Array<Uri>) {
                     filePathCallback.onReceiveValue(uris)
                 }
@@ -285,8 +281,9 @@ class CustomWebView : WebView {
 
     inner class CustomWebClient : WebViewClient() {
         override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-            return mOnShouldInterceptRequest?.shouldInterceptRequest(view,request)
+            return mOnShouldInterceptRequest?.shouldInterceptRequest(view, request)
         }
+
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             mOnPageStartedListener?.onPageStarted(view, url, favicon)
         }
@@ -304,7 +301,6 @@ class CustomWebView : WebView {
 
         override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
             Log.d(TAG, "onReceivedError ssl")
-//                        handler?.proceed()
             handler?.cancel()
         }
 
@@ -362,7 +358,7 @@ class CustomWebView : WebView {
         fun onFileChooseCalled(onFileChosenListener: OnFileChosenListener)
     }
 
-    interface OnShouldInterceptRequest{
-        fun shouldInterceptRequest(view: WebView, request: WebResourceRequest):WebResourceResponse?
+    interface OnShouldInterceptRequest {
+        fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
     }
 }

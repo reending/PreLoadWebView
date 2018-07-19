@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WebViewActivity">
-    <com.demo.xjh.preloadwebview.CustomWebView
+    tools:context=".web.WebViewActivity">
+    <com.demo.xjh.preloadwebview.widget.CacheWebView
         android:id="@+id/cusWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.demo.xjh.preloadwebview.CustomWebView>
+    </com.demo.xjh.preloadwebview.widget.CacheWebView>
 </android.support.constraint.ConstraintLayout>
