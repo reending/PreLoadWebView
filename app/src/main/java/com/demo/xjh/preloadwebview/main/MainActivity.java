@@ -108,7 +108,9 @@ public class MainActivity extends AppCompatActivity {
             List<UrlItem> items = getVisibleItem();
             mPreLoadUtil.reset();
             for (UrlItem urlItem : items) {
-                loadItem(urlItem);
+                if (!UrlItem.SUCCESS.equals(urlItem.state)) {
+                    loadItem(urlItem);
+                }
             }
         }, 3000);
     }
@@ -117,19 +119,19 @@ public class MainActivity extends AppCompatActivity {
         mPreLoadUtil.loadUrl(urlItem.url, new PreLoadUtil.OnLoadListener() {
             @Override
             public void success(String url) {
-                urlItem.state = "预加载成功";
+                urlItem.state = UrlItem.SUCCESS;
                 mAdapter.notifyItemChanged(mList.indexOf(urlItem));
             }
 
             @Override
             public void process(String url, int process) {
-                urlItem.state = "加载中 ：" + process;
+                urlItem.state = UrlItem.LOADING +" : "+ process;
                 mAdapter.notifyItemChanged(mList.indexOf(urlItem));
             }
 
             @Override
             public void error(String url) {
-                urlItem.state = "预加载失败";
+                urlItem.state = UrlItem.ERROR;
                 mAdapter.notifyItemChanged(mList.indexOf(urlItem));
             }
         });

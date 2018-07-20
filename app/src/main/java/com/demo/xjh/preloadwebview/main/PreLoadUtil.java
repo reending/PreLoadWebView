@@ -30,6 +30,7 @@ public class PreLoadUtil {
                 mCacheWebView.loadUrl(mCurrentUrl);
             }
         });
+
         mCacheWebView.setOnReceivedErrorListener((errorCode, description, failingUrl) -> {
             OnLoadListener onLoadListener = mMap.get(mCurrentUrl);
             if (onLoadListener != null) {
@@ -41,13 +42,11 @@ public class PreLoadUtil {
                 mCacheWebView.loadUrl(mCurrentUrl);
             }
         });
-        mCacheWebView.setOnProcessListener(new CustomWebView.onProcessListener() {
-            @Override
-            public void onProcess(int process) {
-                OnLoadListener onLoadListener = mMap.get(mCurrentUrl);
-                if (onLoadListener != null) {
-                    onLoadListener.process(mCurrentUrl, process);
-                }
+
+        mCacheWebView.setOnProcessListener(process -> {
+            OnLoadListener onLoadListener = mMap.get(mCurrentUrl);
+            if (onLoadListener != null) {
+                onLoadListener.process(mCurrentUrl, process);
             }
         });
     }
